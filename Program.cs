@@ -5,14 +5,15 @@ public class Program
     public static void Main()
     {
         const string MsgInputTemperature = "Input a decimal temperature: ";
-        const string MsgInputConverion = "Input a number to convert temperature (1 - Celsius to Fahrenheit, 2 - Fahrenheit to Celsius, 3 - Celsius a Kelvin): ";
-        const string MsgConvertion = "You chose number {0}, convertion: {1}";
+        const string MsgInputConverion = "Input a number to convert temperature (1 - Celsius to Fahrenheit, 2 - Fahrenheit to Celsius, 3 - Celsius a Kelvin). You have {0} attempts left: ";
+        const string MsgConvertion = "You chose number {0}, convertion: {1}.";
         const string MsgIncorrect = "Input a number between 1 and 3.";
+        const string OutOfAttempts = "You are out of attempts.";
         const string MsgBadInput = "Input a natural number.";
 
-        int convertionNumber;
+        int convertionNumber, attempts = 3;
         double temperature = 0;
-        bool notValid = true;
+        bool isValid = true;
 
         do
         {
@@ -25,30 +26,39 @@ public class Program
             catch (FormatException)
             {
                 Console.WriteLine(MsgBadInput);
-                notValid = false;
+                isValid = false;
             }
-        } while (!notValid);
-        
+        } while (!isValid);
+
         do
         {
-            Console.Write(MsgInputConverion);
+            Console.Write(MsgInputConverion, attempts);
             try
             {
                 convertionNumber = Convert.ToInt32(Console.ReadLine());
 
-                if (!NumberRange(convertionNumber))
+                if (NumberRange(convertionNumber))
                 {
+                    Console.WriteLine(MsgConvertion, convertionNumber, Convertion(convertionNumber, ref temperature));
+                }
+                else if (!NumberRange(convertionNumber) && attempts == 1)
+                {
+                    attempts--;
+                    Console.WriteLine(OutOfAttempts);
+                }
+                else
+                {
+                    attempts--;
                     Console.WriteLine(MsgIncorrect);
                 }
             }
             catch (FormatException)
             {
+                attempts--;
                 Console.WriteLine(MsgBadInput);
                 convertionNumber = 0;
             }
-        } while (!NumberRange(convertionNumber));
-
-        Console.WriteLine(MsgConvertion, convertionNumber, Convertion(convertionNumber, ref temperature));
+        } while (!NumberRange(convertionNumber) && attempts > 0);
     }
     public static bool NumberRange(int value)
     {
