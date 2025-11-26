@@ -5,6 +5,7 @@
         const string MsgInputOne = "Input a natural number: ";
         const string MsgCorrect = "The number is between the range of valid numbers.";
         const string MsgIncorrect = "The number isn't between the range of valid numbers.";
+        const string MsgBadInput = "Input a natural number.";
 
         int number;
 
@@ -21,7 +22,7 @@
             }
             catch (FormatException)
             {
-                Console.WriteLine(MsgIncorrect);
+                Console.WriteLine(MsgBadInput);
                 number = 0;
             }
         } while (!NumberRange(number));
