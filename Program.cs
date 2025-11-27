@@ -6,6 +6,8 @@
         const string MsgCorrect = "The number is between the range of valid numbers.";
         const string MsgIncorrect = "The number isn't between the range of valid numbers.";
         const string MsgBadInput = "Input a natural number.";
+        const int MinRange = 10;
+        const int MaxRange = 50;
 
         int number;
 
@@ -15,7 +17,7 @@
             try
             {
                 number = Convert.ToInt32(Console.ReadLine());
-                if (!NumberRange(number))
+                if (!NumberRange(number, MinRange, MaxRange))
                 {
                     Console.WriteLine(MsgIncorrect);
                 }
@@ -25,16 +27,13 @@
                 Console.WriteLine(MsgBadInput);
                 number = 0;
             }
-        } while (!NumberRange(number));
+        } while (!NumberRange(number, MinRange, MaxRange));
 
         Console.WriteLine(MsgCorrect);
     }
 
-    public static bool NumberRange(int value)
+    public static bool NumberRange( int value, int MinRange, int MaxRange)
     {
-        const int MinRange = 10;
-        const int MaxRange = 50;
-
         return value >= MinRange && value <= MaxRange;
     }
 }
