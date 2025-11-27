@@ -4,24 +4,36 @@ public class Program
 {
     public static void Main()
     {
-        const string MsgInputTemperature = "Input a decimal temperature: ";
-        const string MsgInputConverion = "Input a number to convert temperature (1 - Celsius to Fahrenheit, 2 - Fahrenheit to Celsius, 3 - Celsius a Kelvin). You have {0} attempts left: ";
-        const string MsgConvertion = "You chose number {0}, convertion: {1}.";
-        const string MsgIncorrect = "Input a number between 1 and 3.";
-        const string OutOfAttempts = "You are out of attempts.";
+        const string MsgInputHours = "Input the hours you have parked: ";
+        const string MsgInputMinutes = "Input the minutes you have parked: ";
         const string MsgBadInput = "Input a natural number.";
+        const string MsgPayPrice = "You have to pay a total of: {0} €";
 
-        int convertionNumber, attempts = 3;
-        double temperature = 0;
+        double hours = 0, minutes = 0;
         bool isValid = true;
 
         do
         {
             
-            Console.Write(MsgInputTemperature);
+            Console.Write(MsgInputHours);
             try
             {
-                temperature = Convert.ToDouble(Console.ReadLine());
+                hours = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine(MsgBadInput);
+                isValid = false;
+            }
+        } while (!isValid);
+        
+        do
+        {
+
+            Console.Write(MsgInputMinutes);
+            try
+            {
+                minutes = Int32.Parse(Console.ReadLine());
             }
             catch (FormatException)
             {
@@ -30,60 +42,31 @@ public class Program
             }
         } while (!isValid);
 
-        do
-        {
-            Console.Write(MsgInputConverion, attempts);
-            try
-            {
-                convertionNumber = Convert.ToInt32(Console.ReadLine());
-
-                if (NumberRange(convertionNumber))
-                {
-                    Console.WriteLine(MsgConvertion, convertionNumber, Convertion(convertionNumber, ref temperature));
-                }
-                else if (!NumberRange(convertionNumber) && attempts == 1)
-                {
-                    attempts--;
-                    Console.WriteLine(OutOfAttempts);
-                }
-                else
-                {
-                    attempts--;
-                    Console.WriteLine(MsgIncorrect);
-                }
-            }
-            catch (FormatException)
-            {
-                attempts--;
-                Console.WriteLine(MsgBadInput);
-                convertionNumber = 0;
-            }
-        } while (!NumberRange(convertionNumber) && attempts > 0);
+        Console.WriteLine(MsgPayPrice, PriceStation(ref hours, ref minutes));
     }
-    public static bool NumberRange(int value)
+    public static string PriceStation(ref double hours, ref double minutes)
     {
-        const int MinRange = 1;
-        const int MaxRange = 3;
+        const int FirstHourTax = 1;
+        const int IntervalTaxMin = 2;
+        const int IntervalTaxMax = 5;
+        const int FinalTax = 6;
 
-        return value >= MinRange && value <= MaxRange;
-    }
+        double price = 0;
 
-    public static string Convertion(int value, ref double temperature)
-    {
-        double result = 0;
+        hours += minutes / 60;
 
-        switch (value)
+        if (hours >= FirstHourTax)
         {
-            case 1:
-                result = temperature * 9 / 5 + 32;
-                break;
-            case 2:
-                result = (temperature -32) * 5 / 9;
-                break;
-            case 3:
-                result = temperature + 273.15;
-                break;
+            price = hours * 3.50;
         }
-        return result.ToString("F2");
+        if (hours >= IntervalTaxMin && hours <= IntervalTaxMax)
+        {
+            price = hours * 2.00;
+        }
+        if (hours >= FinalTax)
+        {
+            price = hours * 1.50;
+        }
+        return price.ToString("F2");
     }
 }
