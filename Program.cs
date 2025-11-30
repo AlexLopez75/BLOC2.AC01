@@ -6,7 +6,7 @@ public class Program
     public static void Main()
     {
         const string MsgInput = "Input a natrual number: ";
-        const string MsgBadInput = "Input a natural number.";
+        const string MsgBadInput = "Error: your input isn't natural number.";
         const string MsgSum = "Sum of all even digits: {0}";
         const string MsgMult = "Multiplication of all odd digits: {0}";
         const string MsgMinMax = "Major digit: {0}\nMinor digit {1}";
@@ -28,6 +28,7 @@ public class Program
                 if (!IsNatural(number))
                 {
                     Console.WriteLine(MsgBadInput);
+                    isValid = false;
                 }
             }
             catch (FormatException)
