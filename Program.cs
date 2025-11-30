@@ -1,39 +1,34 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Diagnostics.Metrics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class Program
 {
     public static void Main()
     {
-        const string MsgInputHours = "Input the hours you have parked: ";
-        const string MsgInputMinutes = "Input the minutes you have parked: ";
+        const string MsgInput = "Input a natrual number: ";
         const string MsgBadInput = "Input a natural number.";
-        const string MsgPayPrice = "You have to pay a total of: {0} €";
+        const string MsgSum = "Sum of all even digits: {0}";
+        const string MsgMult = "Multiplication of all odd digits: {0}";
+        const string MsgMinMax = "Major digit: {0}\nMinor digit {1}";
 
-        double hours = 0, minutes = 0;
+        int number = 0;
+        int sumEvens = 0;
+        int multOdds = 1;
+        int majorDigit = 0;
+        int minorDigit = 9;
         bool isValid = true;
 
         do
         {
-            
-            Console.Write(MsgInputHours);
+            Console.Write(MsgInput);
             try
             {
-                hours = Int32.Parse(Console.ReadLine());
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine(MsgBadInput);
-                isValid = false;
-            }
-        } while (!isValid);
-        
-        do
-        {
-
-            Console.Write(MsgInputMinutes);
-            try
-            {
-                minutes = Int32.Parse(Console.ReadLine());
+                number = Int32.Parse(Console.ReadLine());
+                IsNatural(number);
+                if (!IsNatural(number))
+                {
+                    Console.WriteLine(MsgBadInput);
+                }
             }
             catch (FormatException)
             {
@@ -42,31 +37,43 @@ public class Program
             }
         } while (!isValid);
 
-        Console.WriteLine(MsgPayPrice, PriceStation(ref hours, ref minutes));
+        NumberSums(number, ref sumEvens, ref multOdds, ref majorDigit, ref minorDigit);
+        Console.WriteLine(MsgSum, sumEvens);
+        Console.WriteLine(MsgMult, multOdds);
+        Console.WriteLine(MsgMinMax, majorDigit, minorDigit);
     }
-    public static string PriceStation(ref double hours, ref double minutes)
+    public static bool IsNatural(int number)
     {
-        const int FirstHourTax = 1;
-        const int IntervalTaxMin = 2;
-        const int IntervalTaxMax = 5;
-        const int FinalTax = 6;
+        return number >= 0;
+    }
 
-        double price = 0;
+    public static void NumberSums(int number, ref int sumEvens, ref int multOdds, ref int majorDigit, ref int minorDigit)
+    {
+        int counter = 0;
+        string input = number.ToString();
 
-        hours += minutes / 60;
+        foreach (char c in input)
+        {
+            counter++;
+            int digit = c - '0'; //Converts c to int.
 
-        if (hours >= FirstHourTax)
-        {
-            price = hours * 3.50;
+            if (digit > majorDigit)
+            {
+                majorDigit = digit;
+            }
+            if (digit < minorDigit)
+            {
+                minorDigit = digit;
+            }
+
+            if (counter % 2 == 0)
+            {
+                sumEvens += digit;
+            }
+            else
+            {
+                multOdds *= digit;
+            }
         }
-        if (hours >= IntervalTaxMin && hours <= IntervalTaxMax)
-        {
-            price = hours * 2.00;
-        }
-        if (hours >= FinalTax)
-        {
-            price = hours * 1.50;
-        }
-        return price.ToString("F2");
     }
 }
