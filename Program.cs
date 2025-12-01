@@ -4,10 +4,12 @@ public class Program
 {
     public static void Main()
     {
+        const int MinRange = 1;
+        const int MaxRange = 3;
         const string MsgInputTemperature = "Input a decimal temperature: ";
         const string MsgInputConverion = "Input a number to convert temperature (1 - Celsius to Fahrenheit, 2 - Fahrenheit to Celsius, 3 - Celsius a Kelvin). You have {0} attempts left: ";
-        const string MsgConvertion = "You chose number {0}, convertion: {1}.";
-        const string MsgIncorrect = "Input a number between 1 and 3.";
+        const string MsgConvertion = "You chose {0}, convertion: {1}.";
+        const string MsgIncorrect = "Input a number between 1 and 3. You have {0} attempts left.";
         const string OutOfAttempts = "You are out of attempts.";
         const string MsgBadInput = "Input a natural number.";
 
@@ -37,19 +39,14 @@ public class Program
             {
                 convertionNumber = Convert.ToInt32(Console.ReadLine());
 
-                if (NumberRange(convertionNumber))
-                {
-                    Console.WriteLine(MsgConvertion, convertionNumber, Convertion(convertionNumber, ref temperature));
-                }
-                else if (!NumberRange(convertionNumber) && attempts == 1)
+                if (!NumberRange(convertionNumber, MaxRange, MinRange))
                 {
                     attempts--;
-                    Console.WriteLine(OutOfAttempts);
-                }
-                else
-                {
-                    attempts--;
-                    Console.WriteLine(MsgIncorrect);
+                    Console.WriteLine(MsgIncorrect, attempts);
+                    if (attempts == 0)
+                    {
+                        Console.WriteLine(OutOfAttempts);
+                    }
                 }
             }
             catch (FormatException)
@@ -58,32 +55,48 @@ public class Program
                 Console.WriteLine(MsgBadInput);
                 convertionNumber = 0;
             }
-        } while (!NumberRange(convertionNumber) && attempts > 0);
+        } while (!NumberRange(convertionNumber, MaxRange, MinRange) && attempts > 0);
+
+        switch (convertionNumber)
+        {
+            case 1:
+                Console.WriteLine(MsgConvertion, convertionNumber, FarenheitConvertion(ref temperature));
+                break;
+            case 2:
+                Console.WriteLine(MsgConvertion, convertionNumber,CelsiusConvertion(ref temperature));
+                break;
+            case 3:
+                Console.WriteLine(MsgConvertion, convertionNumber, KelvinConvertion(ref temperature));
+                break;
+        }
     }
-    public static bool NumberRange(int value)
+    public static bool NumberRange(int value, int maxRange, int minRange)
     {
-        const int MinRange = 1;
-        const int MaxRange = 3;
-
-        return value >= MinRange && value <= MaxRange;
+        return value >= minRange && value <= maxRange;
     }
-
-    public static string Convertion(int value, ref double temperature)
+    public static string FarenheitConvertion(ref double temperature)
     {
         double result = 0;
 
-        switch (value)
-        {
-            case 1:
-                result = temperature * 9 / 5 + 32;
-                break;
-            case 2:
-                result = (temperature -32) * 5 / 9;
-                break;
-            case 3:
-                result = temperature + 273.15;
-                break;
-        }
+        result = temperature * 9 / 5 + 32;
+
+        return result.ToString("F2");
+    }
+    public static string CelsiusConvertion(ref double temperature)
+    {
+        double result = 0;
+
+        result = (temperature - 32) * 5 / 9;
+
+        return result.ToString("F2");
+    }
+
+    public static string KelvinConvertion(ref double temperature)
+    {
+        double result = 0;
+
+        result = temperature + 273.15;
+
         return result.ToString("F2");
     }
 }
