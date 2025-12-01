@@ -7,7 +7,6 @@ public class Program
     {
         const string MsgInput = "Input a natural number: ";
         const string MsgBadInput = "Input a natural number.";
-        const string MsgDecomposition = "{0} = 2^{1}*3^{2}*5^{3}*7^{4}*11^{5}";
 
         int number = 0;
         bool isValid = true;
@@ -31,8 +30,9 @@ public class Program
             }
         } while (!isValid);
 
+        Console.Write($"{number} = ");
         NumberDescomposition(number);
-        Console.WriteLine(MsgDecomposition, number);
+        Console.WriteLine();
     }
     public static bool IsNatural(int number)
     {
@@ -41,17 +41,27 @@ public class Program
 
     public static void NumberDescomposition(int number)
     {
-        int i = 0;
+        int exponent = 2;
+        int counter = 0;
         int aux = number;
 
-        do
+        while (aux > 1)
         {
-            i++;
-            if (aux % i == 0)
+            if (aux % exponent == 0)
             {
-                aux /= i;
-                i = 0;
+                counter++;
+                aux /= exponent;
             }
-        } while (aux > 0); 
+            else
+            {
+                if (counter != 0)
+                {
+                    Console.Write($"{exponent}^{counter}*");
+                }
+                exponent++;
+                counter = 0;
+            }
+        }
+        Console.WriteLine($"{exponent}^{counter}");
     }
 }
