@@ -5,17 +5,11 @@ public class Program
 {
     public static void Main()
     {
-        const string MsgInput = "Input a natrual number: ";
+        const string MsgInput = "Input a natural number: ";
         const string MsgBadInput = "Input a natural number.";
-        const string MsgSum = "Sum of all even digits: {0}";
-        const string MsgMult = "Multiplication of all odd digits: {0}";
-        const string MsgMinMax = "Major digit: {0}\nMinor digit {1}";
+        const string MsgDecomposition = "{0} = 2^{1}*3^{2}*5^{3}*7^{4}*11^{5}";
 
         int number = 0;
-        int sumEvens = 0;
-        int multOdds = 1;
-        int majorDigit = 0;
-        int minorDigit = 9;
         bool isValid = true;
 
         do
@@ -37,43 +31,27 @@ public class Program
             }
         } while (!isValid);
 
-        NumberSums(number, ref sumEvens, ref multOdds, ref majorDigit, ref minorDigit);
-        Console.WriteLine(MsgSum, sumEvens);
-        Console.WriteLine(MsgMult, multOdds);
-        Console.WriteLine(MsgMinMax, majorDigit, minorDigit);
+        NumberDescomposition(number);
+        Console.WriteLine(MsgDecomposition, number);
     }
     public static bool IsNatural(int number)
     {
         return number >= 0;
     }
 
-    public static void NumberSums(int number, ref int sumEvens, ref int multOdds, ref int majorDigit, ref int minorDigit)
+    public static void NumberDescomposition(int number)
     {
-        int counter = 0;
-        string input = number.ToString();
+        int i = 0;
+        int aux = number;
 
-        foreach (char c in input)
+        do
         {
-            counter++;
-            int digit = c - '0'; //Converts c to int.
-
-            if (digit > majorDigit)
+            i++;
+            if (aux % i == 0)
             {
-                majorDigit = digit;
+                aux /= i;
+                i = 0;
             }
-            if (digit < minorDigit)
-            {
-                minorDigit = digit;
-            }
-
-            if (counter % 2 == 0)
-            {
-                sumEvens += digit;
-            }
-            else
-            {
-                multOdds *= digit;
-            }
-        }
+        } while (aux > 0); 
     }
 }
